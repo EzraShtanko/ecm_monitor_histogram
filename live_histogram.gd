@@ -1,3 +1,4 @@
+@tool
 class_name LiveHistogram
 extends ColorRect
 
@@ -12,7 +13,7 @@ const shader_CANVAS_HISTOGRAM: Shader = preload("res://addons/ecm_monitor_histog
 
 @export var color_nil: Color 	= Color(0.2, 		0.1, 	0., 	0.25):
 	set(v): color_nil = v;		reconfig.post()
-@export var color_max: Color 	= Color( 	0.5,	0.2,	0.1,	0.45):
+@export var color_max: Color 	= Color(0.25, 	0.5, 	0.4, 	0.4):
 	set(v): color_max = v;		reconfig.post()
 @export var color_avg: Color 	= Color(	0.8,	0.1,	0.,		0.65):
 	set(v): color_avg = v;		reconfig.post()
@@ -43,6 +44,10 @@ func _ready() -> void:
 	material.shader = shader_CANVAS_HISTOGRAM
 	buffer = PackedVector2Array()
 	buffer.resize(RESOLUTION)
+
+func _physics_process(delta: float) -> void:
+	reconfig.process()
+
 
 func log_value(v: float) -> void:
 	var w = (v - bracket_min) / bracket_max

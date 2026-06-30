@@ -8,15 +8,12 @@ func _enable_plugin() -> void:
 
 
 func _disable_plugin() -> void:
-	# Remove autoloads here.
 	pass
 
 
 func _enter_tree() -> void:
-	# Initialization of the plugin goes here.
-	pass
+	add_custom_type("LiveHistogram", "ColorRect", preload("res://addons/ecm_monitor_histogram/live_histogram.gd"), preload("res://addons/ecm_monitor_histogram/img/bar_graph.svg"))
 
 
 func _exit_tree() -> void:
-	# Clean-up of the plugin goes here.
-	pass
+	remove_custom_type("LiveHistogram")
