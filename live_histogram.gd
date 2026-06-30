@@ -1,0 +1,10 @@
+class_name LiveHistogram
+extends ColorRect
+
+
+func _ready() -> void:
+	pass
+
+
+func _process(delta: float) -> void:
+	pass
