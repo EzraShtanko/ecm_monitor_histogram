@@ -92,7 +92,6 @@ func on_ready() -> void:
 		label_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label_name.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 		add_child(label_name)
-		label_name.owner = self
 		label_name.text = label
 		label_name.force_update_transform()
 		
@@ -111,7 +110,6 @@ func on_ready() -> void:
 		label_max.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		label_max.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 		add_child(label_max)
-		label_name.owner = self
 		label_max.text = "%5.2f" % bracket_max
 		label_max.force_update_transform()
 		
