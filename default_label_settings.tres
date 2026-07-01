@@ -1,3 +1,9 @@
 [gd_resource type="LabelSettings" format=3 uid="uid://bfempk2isdw07"]
 
+[ext_resource type="FontFile" uid="uid://b0y3654j8q4dj" path="res://addons/ecm_monitor_histogram/font/lucon.ttf" id="1_31txi"]
+
 [resource]
+font = ExtResource("1_31txi")
+font_size = 11
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)

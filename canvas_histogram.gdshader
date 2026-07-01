@@ -16,7 +16,6 @@ void fragment() {
 	int t_cell_idx	= int(floor(UV.x * float(MONITOR_RESOLUTION)));
 
 	color = mix(color_value_nil, color_value_max, float(local_y < buffer[t_cell_idx].x));
-	color = mix(color, color_value_clip, float (buffer[t_cell_idx].x > 1.));
 	color = mix(
 		color, 
 		mix(
@@ -25,6 +24,7 @@ void fragment() {
 			float(local_y > buffer[t_cell_idx].x && local_y < buffer[t_cell_idx].y)), 
 		float(local_y < buffer[t_cell_idx].y)
 	);
+	color = mix(color, color_value_clip, float (buffer[t_cell_idx].x > 1.));
 
 	COLOR = color;
 }
