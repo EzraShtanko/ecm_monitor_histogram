@@ -86,64 +86,53 @@ func _ready() -> void:
 
 func on_ready() -> void:
 	ready.disconnect(on_ready)
-	if not $LabelName:
-		label_name = Label.new()
-		label_name.name = "LabelName"
-		label_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label_name.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
-		add_child(label_name)
-		label_name.text = label
-		label_name.force_update_transform()
-		
-		label_name.anchor_top = 0.
-		label_name.anchor_bottom = 0.
-		label_name.anchor_left = 0.65
-		label_name.anchor_right = 0.65
-		label_name.position = Vector2(size.x * 0.65, 0.)
-	elif not label_name:
-		label_name = $LabelName
+	label_name = Label.new()
+	label_name.name = "LabelName"
+	label_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label_name.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	add_child(label_name)
+	label_name.text = label
+	label_name.force_update_transform()
 	
+	label_name.anchor_top = 0.
+	label_name.anchor_bottom = 0.
+	label_name.anchor_left = 0.65
+	label_name.anchor_right = 0.65
+	label_name.position = Vector2(size.x * 0.65, 0.)
 	
-	if not $LabelMax:
-		label_max = Label.new()
-		label_max.name = "LabelMax"
-		label_max.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		label_max.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
-		add_child(label_max)
-		label_max.text = "%5.2f" % bracket_max
-		label_max.force_update_transform()
-		
-		label_max.size.x = 50.
-		
-		label_max.anchor_top = 0.
-		label_max.anchor_bottom = 0.
-		label_max.anchor_left = 1.
-		label_max.anchor_right = 1.
-		
-		label_max.position = Vector2(size.x - 55., 0.)
-	elif not label_max:
-		label_max = $LabelMax
+
+	label_max = Label.new()
+	label_max.name = "LabelMax"
+	label_max.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	label_max.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	add_child(label_max)
+	label_max.text = "%5.2f" % bracket_max
+	label_max.force_update_transform()
 	
+	label_max.size.x = 50.
 	
-	if not $LabelMin:
-		label_min = Label.new()
-		label_min.name = "LabelMax"
-		label_min.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		label_min.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-		add_child(label_min)
-		label_min.text = "%5.2f" % bracket_min
-		
-		label_min.size.x = 50.
-		
-		label_min.anchor_top = 1.
-		label_min.anchor_bottom = 1.
-		label_min.anchor_left = 1.
-		label_min.anchor_right = 1.
-		
-		label_min.position = size - Vector2(55., label_min.size.y)
-	elif not label_min:
-		label_min = $LabelMin
+	label_max.anchor_top = 0.
+	label_max.anchor_bottom = 0.
+	label_max.anchor_left = 1.
+	label_max.anchor_right = 1.
 	
+	label_max.position = Vector2(size.x - 55., 0.)
+	
+	label_min = Label.new()
+	label_min.name = "LabelMax"
+	label_min.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	label_min.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	add_child(label_min)
+	label_min.text = "%5.2f" % bracket_min
+	
+	label_min.size.x = 50.
+	
+	label_min.anchor_top = 1.
+	label_min.anchor_bottom = 1.
+	label_min.anchor_left = 1.
+	label_min.anchor_right = 1.
+	
+	label_min.position = size - Vector2(55., label_min.size.y)
 	
 	
 	for i: Label in [label_name, label_min, label_max]:
