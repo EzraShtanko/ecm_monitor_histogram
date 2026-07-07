@@ -2,6 +2,8 @@
 class_name LiveRidgelineGraph
 extends Control
 
+
+
 @export var resolution: int = 256
 @export var labels: Array[String] = []
 @export var inputs: Array[Vector3]:
@@ -12,7 +14,8 @@ extends Control
 @export var range_gradient: Gradient
 
 @export_group("Test Input")
-@export_custom(PROPERTY_HINT_GROUP_ENABLE, "") var enable_test_input: bool = false
+# @export_custom(PROPERTY_HINT_GROUP_ENABLE, "") var enable_test_input: bool = false
+@export var enable_test_input: bool = false
 @export var test_values: Array[float] = []
 
 var buffer: Array[PackedVector2Array]
@@ -49,16 +52,18 @@ func process_values(a: Array[float]) -> void:
 		buffer[i][0] = Vector2(
 			0., 
 			( 1. - clampf(remap(
-				a[i], 
-				inputs[i].x, inputs[i].y, # ··································· x and y of inputs[] vectors define bracket_min and bracket_max respectively
+				a[i],
+				inputs[i].x, inputs[i].y, # ··················································· x and y of inputs[] vectors define bracket_min and bracket_max respectively
 				0., 1.
-			), 0., 1.) ) * size.y / float(inputs.size()) # ·························· default maximum height of the ridge (double the segment height) 
-			+ size.y / float(inputs.size() * (i + 1))) # ······················ ridge-index position in the layout frame
-		colors[i][0] = range_gradient.sample(remap(a[i], inputs[i].x, inputs[i].y, 0., 1.))
+			), 0., 1.) + inputs[i].z ) * size.y / float(inputs.size()) * 1.4 # ················ default maximum height of the ridge (double the segment height) 
+			+ size.y / float(inputs.size()) * (i - 1)) # ······································ ridge-index position in the layout frame
+		colors[i][0] = range_gradient.sample(abs(inputs[i].z - remap(a[i], inputs[i].x, inputs[i].y, 0., 1.)) / maxf(inputs[i].z, 1. - inputs[i].z))
 	queue_redraw()
 
 func _draw() -> void:
 	for i in inputs.size():
+		var z_line_h: float = (i + 0.4) * (size.y / float(inputs.size()))
+		draw_dashed_line(Vector2(0., z_line_h), Vector2(size.x, z_line_h), Color(1., 1., 1., 0.3), 1., 4.)
 		draw_polyline_colors(buffer[i], colors[i], 1, false)
 
 func update_buffer_size() -> void:
