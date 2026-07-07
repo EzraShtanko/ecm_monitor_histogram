@@ -49,6 +49,7 @@ func process_values(a: Array[float]) -> void:
 				buffer[i][j - 1].y
 			)
 			colors[i][j] = colors[i][j - 1]
+		
 		buffer[i][0] = Vector2(
 			0., 
 			( 1. - clampf(remap(
@@ -56,7 +57,8 @@ func process_values(a: Array[float]) -> void:
 				inputs[i].x, inputs[i].y, # ··················································· x and y of inputs[] vectors define bracket_min and bracket_max respectively
 				0., 1.
 			), 0., 1.) + inputs[i].z ) * size.y / float(inputs.size()) * 1.4 # ················ default maximum height of the ridge (double the segment height) 
-			+ size.y / float(inputs.size()) * (i - 1)) # ······································ ridge-index position in the layout frame
+			+ size.y / float(inputs.size()) * (i - 1) # ······································ ridge-index position in the layout frame
+		)
 		colors[i][0] = range_gradient.sample(abs(inputs[i].z - remap(a[i], inputs[i].x, inputs[i].y, 0., 1.)) / maxf(inputs[i].z, 1. - inputs[i].z))
 	queue_redraw()
 
