@@ -4,7 +4,7 @@ extends ColorRect
 
 const RESOLUTION: int = 256
 
-const shader_CANVAS_HISTOGRAM		: Shader 			= preload("res://addons/ecm_monitor_histogram/canvas_histogram.gdshader")
+const shader_CANVAS_HISTOGRAM			: Shader 					= preload("res://addons/ecm_monitor_histogram/canvas_histogram.gdshader")
 const res_DEFAULT_LABEL_SETTINGS	: LabelSettings 	= preload("res://addons/ecm_monitor_histogram/default_label_settings.tres")
 
 
@@ -14,29 +14,29 @@ const updated_LABELS	:= 0x01 << 2
 
 
 @export var label				: String	= "Untitled Monitor":
-	set(v): label = v;			reconfig.post(updated_LABELS)
+	set(v): label = v;			reconfig |= updated_LABELS
 @export var bracket_max			: float = 1.:
-	set(v): bracket_max = v;	reconfig.post(updated_LABELS)
+	set(v): bracket_max = v;	reconfig |= updated_LABELS
 @export var bracket_min			: float = 0.:
-	set(v): bracket_min = v;	reconfig.post(updated_LABELS)
+	set(v): bracket_min = v;	reconfig |= updated_LABELS
 @export_range(1, RESOLUTION - 1) var bracket_avg: int = 32
 @export var custom_label_settings: LabelSettings:
-	set(v): custom_label_settings = v; reconfig.post(updated_LABELS)
+	set(v): custom_label_settings = v; reconfig |= updated_LABELS
 
 @export_tool_button("Test Fill") var action_fill_test: Callable = fill_test_buffer
 @export_tool_button("Clear Buffer") var action_clear_buffer: Callable = clear_buffer
 
 
 @export var color_nil: Color 	= Color(0.2, 		0.1, 	0., 	0.25):
-	set(v): color_nil = v;		reconfig.post(updated_COLORS)
+	set(v): color_nil = v;		reconfig |= updated_COLORS
 @export var color_max: Color 	= Color(0.25, 	0.5, 	0.4, 	0.4):
-	set(v): color_max = v;		reconfig.post(updated_COLORS)
+	set(v): color_max = v;		reconfig |= updated_COLORS
 @export var color_avg: Color 	= Color(	0.8,	0.1,	0.,		0.65):
-	set(v): color_avg = v;		reconfig.post(updated_COLORS)
+	set(v): color_avg = v;		reconfig |= updated_COLORS
 @export var color_low: Color	= Color(0.,		0.1,	0.5,	0.4):
-	set(v): color_low = v;		reconfig.post(updated_COLORS)
+	set(v): color_low = v;		reconfig |= updated_COLORS
 @export var color_clip: Color	= Color( 1.0,		1.0,	0.6,	0.8):
-	set(v): color_clip = v;		reconfig.post(updated_COLORS)
+	set(v): color_clip = v;		reconfig |= updated_COLORS
 
 
 var label_max	: Label
@@ -46,28 +46,29 @@ var label_name	: Label
 
 var buffer: PackedVector2Array
 
-class Reconfig extends mio.Reconfig:
-	var x: LiveHistogram
-	func _init(_x: LiveHistogram): x = _x
-	func _process(f: int = 0xffff) -> void:
-		if f & updated_COLORS:
-			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_nil", 	x.color_nil)
-			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_max", 	x.color_max)
-			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_avg", 	x.color_avg)
-			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_low",		x.color_low)
-			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_clip", 	x.color_clip)
-		
-		if f & updated_LABELS:
-			x.label_name.text = x.label
-			x.label_max.text = "%5.2f" % x.bracket_max
-			x.label_min.text = "%5.2f" % x.bracket_min
-			
-			if x.custom_label_settings:
-				for i: Label in [x.label_name, x.label_min, x.label_max]:
-					i.label_settings = x.custom_label_settings
-			
-			pass
-var reconfig := Reconfig.new(self)
+# class Reconfig extends mio.Reconfig:
+# 	var x: LiveHistogram
+# 	func _init(_x: LiveHistogram): x = _x
+# 	func _process(f: int = 0xffff) -> void:
+# 		if f & updated_COLORS:
+# 			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_nil", 	x.color_nil)
+# 			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_max", 	x.color_max)
+# 			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_avg", 	x.color_avg)
+# 			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_low",		x.color_low)
+# 			(x.material as ShaderMaterial).set_shader_parameter(&"color_value_clip", 	x.color_clip)
+#
+# 		if f & updated_LABELS:
+# 			x.label_name.text = x.label
+# 			x.label_max.text = "%5.2f" % x.bracket_max
+# 			x.label_min.text = "%5.2f" % x.bracket_min
+#
+# 			if x.custom_label_settings:
+# 				for i: Label in [x.label_name, x.label_min, x.label_max]:
+# 					i.label_settings = x.custom_label_settings
+#
+# 			pass
+# var reconfig := Reconfig.new(self)
+var reconfig: int = 0xffff
 
 
 func _ready() -> void:
@@ -140,12 +141,28 @@ func on_ready() -> void:
 	
 	
 	
-func on_resized() -> void: reconfig.post()
+func on_resized() -> void: reconfig |= 0xffff
 	
 	
 
 func _physics_process(delta: float) -> void:
-	reconfig.process()
+	if reconfig:
+		if reconfig & updated_COLORS:
+			(material as ShaderMaterial).set_shader_parameter(&"color_value_nil", 	color_nil)
+			(material as ShaderMaterial).set_shader_parameter(&"color_value_max", 	color_max)
+			(material as ShaderMaterial).set_shader_parameter(&"color_value_avg", 	color_avg)
+			(material as ShaderMaterial).set_shader_parameter(&"color_value_low",		color_low)
+			(material as ShaderMaterial).set_shader_parameter(&"color_value_clip", 	color_clip)
+		
+		if reconfig & updated_LABELS:
+			label_name.text = label
+			label_max.text = "%5.2f" % bracket_max
+			label_min.text = "%5.2f" % bracket_min
+			
+			if custom_label_settings:
+				for i: Label in [label_name, label_min, label_max]:
+					i.label_settings = custom_label_settings
+		pass
 
 
 func log_value(v: float) -> void:
