@@ -66,7 +66,7 @@ func _draw() -> void:
 	for i in inputs.size():
 		var z_line_h: float = (i + 0.4) * (size.y / float(inputs.size()))
 		draw_dashed_line(Vector2(0., z_line_h), Vector2(size.x, z_line_h), Color(1., 1., 1., 0.3), 1., 4.)
-		draw_polyline_colors(buffer[i], colors[i], 1, false)
+		draw_polyline_colors(buffer[i], colors[i], 2, false)
 
 func update_buffer_size() -> void:
 	test_buffer.resize(inputs.size())
